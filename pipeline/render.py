@@ -8,6 +8,7 @@ que falha não perde os anteriores (os prontos são pulados) e a junção é ins
     o atraso do AAC não acumular entre as partes; depois concatena e normaliza em -14 LUFS uma vez só.
 """
 import glob
+import json
 import os
 import subprocess
 
@@ -44,10 +45,15 @@ def renderizar(video_dir, total, partes_dir, bloco=BLOCO, qualidade='delivery'):
 def dur_video(p):
     """Duração real do vídeo pelo número de quadros (o 'duration' do contêiner inclui o áudio)."""
     out = subprocess.run([FFPROBE, '-v', 'error', '-select_streams', 'v:0', '-count_packets', '-show_entries',
-                          'stream=nb_read_packets,r_frame_rate', '-of', 'csv=p=0', p], capture_output=True, text=True, check=True).stdout.strip()
-    fps, n = out.split(',')
-    a, b = fps.split('/')
-    return int(n) / (int(a) / int(b))
+                          'stream=nb_read_packets,r_frame_rate', '-of', 'json', p], capture_output=True, text=True, check=True).stdout
+    return duracao_ffprobe(out)
+
+
+def duracao_ffprobe(saida_json):
+    """Quadros / fps a partir do JSON do ffprobe (por nome, não pela ordem das colunas)."""
+    st = json.loads(saida_json)['streams'][0]
+    a, b = st['r_frame_rate'].split('/')
+    return int(st['nb_read_packets']) / (int(a) / int(b))
 
 
 def juntar(partes_dir, final):
