@@ -1,0 +1,19 @@
+# Cache de tiles de mapa e malhas do IBGE (dezenas de MB)
+cache/
+# Saídas de produção (voz, quadros, vídeos)
+saida/
+partes/
+tmp/
+*.mp4
+*.wav
+*.mp3
+# Ambiente
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+# Perfis de navegador da publicação (sessões logadas): nunca versionar
+.perfil*/
+.env

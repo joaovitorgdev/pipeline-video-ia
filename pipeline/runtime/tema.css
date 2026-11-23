@@ -1,0 +1,74 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #05070d; }
+#root { width: 100%; height: 100%; position: relative; }
+/* cena */
+.cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+.cam > img.fundo { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+.cam > svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.vinheta { position: absolute; inset: 0; background: radial-gradient(ellipse at 55% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+.foto { position: absolute; inset: -40px; }
+.foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.foto.contem img { object-fit: contain; }
+.papel { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, #2a2f3a 0%, #10141d 70%, #080a10 100%); }
+/* camadas sobre a cena: o .ov é animado pelo GSAP; o filho centraliza com transform próprio */
+.ov { position: absolute; opacity: 0; z-index: 5; }
+.ov.centro > * { transform: translateX(-50%); }
+.chip { font-family: "Archivo Black", sans-serif; font-size: 40px; line-height: 1; color: #111; background: #FFD23F; padding: 14px 24px 17px;
+  border-radius: 12px; box-shadow: 0 8px 0 rgba(0,0,0,.35); white-space: nowrap; display: inline-block; }
+.chip.vm { background: #E8392B; color: #fff; }
+.chip.escuro { background: rgba(10,14,24,.88); color: #fff; border: 3px solid rgba(255,255,255,.2); box-shadow: none; }
+.cartao { width: 640px; font-family: "Archivo Black", sans-serif; color: #151515; background: #F7F2E7; border-radius: 18px; padding: 22px 30px 26px;
+  box-shadow: 0 14px 0 rgba(0,0,0,.35); line-height: 1.05; font-size: 52px; }
+.cartao small { display: block; font-family: "Inter", sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 2px; color: #7A6A50; margin-bottom: 8px; }
+.cartao b, .doc b { color: #C8281C; font-weight: inherit; }
+.doc { width: 720px; background: #EFE6D2; font-family: "EB Garamond", serif; font-style: italic; font-size: 44px; line-height: 1.22; color: #2A2116;
+  padding: 34px 42px 30px; border-radius: 6px; box-shadow: 0 18px 34px rgba(0,0,0,.5); border-left: 10px solid #B4874A; }
+.doc .de { display: block; margin-top: 18px; font-family: "Inter", sans-serif; font-style: normal; font-weight: 800; font-size: 28px; letter-spacing: 1px; color: #7A5A30; }
+.carimbo { font-family: "Archivo Black", sans-serif; color: #fff; background: #E8392B; border: 8px solid #fff; border-radius: 14px; padding: 10px 30px 16px;
+  font-size: 88px; line-height: 1; box-shadow: 0 16px 0 rgba(0,0,0,.35); white-space: nowrap; display: inline-block; }
+.carimbo.am { background: #FFD23F; color: #111; border-color: #111; }
+.numero { font-family: "Archivo Black", sans-serif; font-size: 150px; line-height: 1; color: #FFD23F; -webkit-text-stroke: 16px #0B0F18; paint-order: stroke fill;
+  white-space: nowrap; text-align: center; }
+.numero small { display: block; font-size: 40px; color: #fff; -webkit-text-stroke: 9px #0B0F18; margin-top: 10px; }
+.lista { width: 660px; }
+.lista .item { position: relative; font-family: "Archivo Black", sans-serif; font-size: 40px; line-height: 1; color: #fff; background: rgba(12,18,32,.92);
+  border: 3px solid rgba(255,255,255,.16); border-radius: 14px; padding: 18px 26px 21px; margin-bottom: 14px; opacity: 0; }
+.lista .item .risco { position: absolute; left: 16px; right: 16px; top: 46%; height: 8px; background: #E8392B; border-radius: 4px; transform-origin: 0 50%; }
+.polaroid { width: 580px; background: #fff; padding: 18px 18px 76px; box-shadow: 0 20px 40px rgba(0,0,0,.55); position: relative; }
+.polaroid img { width: 544px; height: 380px; object-fit: cover; display: block; }
+.polaroid span { position: absolute; left: 10px; right: 10px; bottom: 18px; text-align: center; font-family: "Nunito", sans-serif; font-weight: 800; font-size: 30px; color: #222; }
+.compara { display: flex; gap: 40px; }
+.compara > div { min-width: 420px; text-align: center; background: rgba(12,18,32,.92); border-radius: 18px; padding: 26px 34px 30px; border: 3px solid rgba(255,255,255,.16); }
+.compara small { display: block; font-family: "Inter", sans-serif; font-weight: 800; font-size: 30px; letter-spacing: 2px; color: #9FB0C8; }
+.compara strong { display: block; white-space: nowrap; font-family: "Archivo Black", sans-serif; font-size: 64px; color: #fff; line-height: 1.05; margin-top: 8px; }
+.compara .depois strong { color: #FFD23F; }
+/* no mapa */
+.rotulo { position: absolute; opacity: 0; }
+.rotulo span { position: absolute; transform: translate(-50%, -50%); font-family: "Archivo Black", sans-serif; font-size: 30px; color: #fff;
+  -webkit-text-stroke: 8px #0B0F18; paint-order: stroke fill; white-space: nowrap; }
+.rotulo.grande span { font-size: 44px; -webkit-text-stroke: 10px #0B0F18; }
+.rotulo.am span { color: #FFD23F; }
+.credito { position: absolute; right: 24px; bottom: 16px; font-family: "Inter", sans-serif; font-weight: 600; font-size: 18px; color: rgba(255,255,255,.8);
+  background: rgba(0,0,0,.5); padding: 4px 10px; border-radius: 6px; z-index: 3; }
+.fonte-foto { position: absolute; left: 40px; top: 120px; font-family: "Inter", sans-serif; font-weight: 700; font-size: 28px; color: rgba(255,255,255,.95);
+  background: rgba(0,0,0,.6); padding: 8px 14px; border-radius: 8px; z-index: 6; opacity: 0; }
+/* capítulo */
+.capitulo { position: absolute; inset: 0; background: rgba(4,8,18,.82); z-index: 9; opacity: 0; }
+.capitulo .n { position: absolute; left: 960px; top: 330px; }
+.capitulo .n span { transform: translateX(-50%); display: inline-block; font-family: "Archivo Black", sans-serif; font-size: 40px; letter-spacing: 6px; color: #111;
+  background: #FFD23F; padding: 12px 26px 15px; border-radius: 10px; }
+.capitulo h1 { position: absolute; left: 0; right: 0; top: 420px; text-align: center; font-family: "Archivo Black", sans-serif; font-weight: normal; font-size: 104px;
+  line-height: 1; color: #fff; -webkit-text-stroke: 14px #0B0F18; paint-order: stroke fill; padding: 0 80px; }
+.capitulo p { position: absolute; left: 0; right: 0; top: 660px; text-align: center; font-family: "EB Garamond", serif; font-style: italic; font-size: 52px; color: #FFD23F; }
+/* cortes: foto ou vídeo real por cima da cena */
+.corte { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 4; opacity: 0; overflow: hidden; background: #000; }
+.corte > img, .corte > video { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; display: block; }
+.corte.janela { left: 420px; top: 150px; width: 1080px; height: 640px; border: 12px solid #fff; box-shadow: 0 24px 50px rgba(0,0,0,.6); }
+.corte.janela > img, .corte.janela > video { width: 1056px; height: 616px; }
+.corte.janela.dir { left: 760px; }
+.corte .leg { position: absolute; left: 40px; top: 112px; font-family: "Archivo Black", sans-serif; font-size: 34px; color: #fff; background: rgba(10,14,24,.82);
+  border-left: 8px solid #FFD23F; padding: 10px 20px 12px; white-space: nowrap; opacity: 0; }
+.corte.janela .leg { left: 20px; top: 20px; font-size: 30px; }
+.corte .cred { position: absolute; right: 24px; bottom: 16px; font-family: "Inter", sans-serif; font-weight: 600; font-size: 18px; color: rgba(255,255,255,.85);
+  background: rgba(0,0,0,.5); padding: 4px 10px; border-radius: 6px; }
+.corte.janela .cred { right: 12px; bottom: 10px; font-size: 16px; }

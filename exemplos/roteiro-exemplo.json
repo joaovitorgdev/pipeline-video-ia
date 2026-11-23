@@ -1,0 +1,43 @@
+{
+  "pergunta": "POR QUE A CAPITAL FICA NO **CENTRO**?",
+  "vistas": {
+    "brasil": {"centro": [-54.0, -15.0], "zoom": 4.95, "camada": "bm"},
+    "df": {"centro": [-47.8, -15.78], "zoom": 9, "camada": "s2"}
+  },
+  "cenas": [
+    {
+      "capitulo": {"n": 1, "titulo": "Uma capital no **cerrado**", "pergunta": "POR QUE A CAPITAL SAIU DO **LITORAL**?"},
+      "narracao": "Em mil novecentos e sessenta, o Brasil mudou a sua capital do Rio de Janeiro para o meio do cerrado.",
+      "fundo": {"tipo": "mapa", "vista": "brasil", "ufs": true},
+      "fx": [
+        {"em": "Rio de Janeiro", "tipo": "pin", "lnglat": [-43.2, -22.9], "rotulo": "Rio de Janeiro"},
+        {"em": "meio do cerrado", "tipo": "seta", "de": [-43.2, -22.9], "para": [-47.9, -15.8]},
+        {"em": "cerrado", "tipo": "pin", "lnglat": [-47.9, -15.8], "rotulo": "Brasília", "cor": "vm"}
+      ]
+    },
+    {
+      "narracao": "A ideia era antiga: a Constituição de mil oitocentos e noventa e um já reservava uma área no Planalto Central.",
+      "fundo": {"tipo": "mapa", "vista": "brasil", "ufs": true},
+      "fx": [
+        {"em": "Constituição", "tipo": "doc", "texto": "uma zona de 14.400 quilômetros quadrados", "de": "Constituição de 1891, art. 3º"},
+        {"em": "Planalto Central", "tipo": "anel", "lnglat": [-47.9, -15.8], "cor": "am"}
+      ]
+    },
+    {
+      "narracao": "Hoje, o Distrito Federal tem quase seis mil quilômetros quadrados.",
+      "fundo": {"tipo": "mapa", "vista": "df", "ufs": false},
+      "fx": [
+        {"em": "Distrito Federal", "tipo": "contorno", "geo": "uf:DF", "cor": "am", "rotulo": "DF"},
+        {"em": "quase seis mil", "tipo": "numero", "de": 0, "ate": 5760, "suf": " km²", "rotulo": "área do DF"}
+      ]
+    },
+    {
+      "narracao": "Levar a capital para o interior era uma forma de ocupar o território e ligar as regiões do país.",
+      "fundo": {"tipo": "papel"},
+      "fx": [
+        {"em": "interior", "tipo": "chip", "texto": "INTERIORIZAÇÃO"},
+        {"em": "ligar", "tipo": "cartao", "small": "Inauguração", "texto": "21 de abril de **1960**"}
+      ]
+    }
+  ]
+}

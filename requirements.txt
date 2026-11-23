@@ -1,0 +1,12 @@
+# Pipeline (python -m pipeline montar / midia / render)
+edge-tts>=7.0
+faster-whisper>=1.0
+numpy>=1.26
+soundfile>=0.12
+Pillow>=10.1
+
+# Opcional: publicação automática (publicar/youtube.py, publicar/tiktok.py)
+# playwright>=1.45
+
+# Fora do pip: ffmpeg/ffprobe no PATH e Node.js (npx hyperframes) para o render.
+# Testes: só pytest (pip install pytest).

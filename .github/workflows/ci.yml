@@ -1,0 +1,19 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Os testes cobrem só lógica pura (sem rede, GPU, ffmpeg, Whisper ou TTS): basta o pytest.
+      - run: pip install pytest
+      - run: pytest -v
+      - run: python -m pipeline --help
+      - run: python -m pipeline validar exemplos/roteiro-exemplo.json
