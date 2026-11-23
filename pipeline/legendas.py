@@ -65,9 +65,12 @@ def tempos(modelo, wav, texto):
     import soundfile as sf
 
     a16 = wav[:-4] + '_16k.wav'
-    subprocess.run([FFMPEG, '-y', '-loglevel', 'error', '-i', wav, '-ar', '16000', '-ac', '1', a16], check=True)
-    a, _ = sf.read(a16, dtype='float32')
-    os.remove(a16)
+    try:
+        subprocess.run([FFMPEG, '-y', '-loglevel', 'error', '-i', wav, '-ar', '16000', '-ac', '1', a16], check=True)
+        a, _ = sf.read(a16, dtype='float32')
+    finally:
+        if os.path.exists(a16):
+            os.remove(a16)
     segs, _ = modelo.transcribe(a, language='pt', word_timestamps=True, initial_prompt=texto)
     return alinha(texto, [(w.word, w.start, w.end) for s in segs for w in s.words])
 
