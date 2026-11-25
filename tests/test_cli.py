@@ -12,7 +12,7 @@ def test_help_lista_comandos(capsys):
         parser().parse_args(['--help'])
     assert e.value.code == 0
     out = capsys.readouterr().out
-    for cmd in ('validar', 'montar', 'midia', 'render'):
+    for cmd in ('validar', 'gerar', 'montar', 'midia', 'render'):
         assert cmd in out
 
 
