@@ -5,8 +5,11 @@ numpy>=1.26
 soundfile>=0.12
 Pillow>=10.1
 
+# Opcional: gerar o roteiro a partir de um tema (python -m pipeline gerar)
+anthropic>=2.14
+
 # Opcional: publicação automática (publicar/youtube.py, publicar/tiktok.py)
 # playwright>=1.45
 
 # Fora do pip: ffmpeg/ffprobe no PATH e Node.js (npx hyperframes) para o render.
-# Testes: só pytest (pip install pytest).
+# Testes: pytest e anthropic (pip install pytest anthropic), sem rede.
