@@ -26,6 +26,7 @@ flowchart LR
 
 | Etapa | O que faz | Tecnologia | Código |
 |---|---|---|---|
+| Geração do roteiro (opcional) | Escreve um `roteiro.json` inicial a partir de um tema, com saída estruturada validada por Pydantic | API do Claude (SDK `anthropic`), Pydantic | `pipeline/gerar.py` |
 | Roteiro | Cenas com narração, fundo (mapa, foto, vídeo) e peças que entram em palavras específicas | JSON + validação própria | `pipeline/roteiro.py` |
 | Narração | Uma faixa de voz por cena, com silêncio uniforme nas pontas | edge-tts (voz neural pt-BR), numpy, ffmpeg | `pipeline/tts.py` |
 | Tempos | Início e fim de cada palavra do roteiro | faster-whisper (`word_timestamps`) + alinhamento com difflib | `pipeline/legendas.py` |
@@ -105,10 +106,28 @@ python publicar/tiktok.py saida/exemplo/final.mp4 "legenda #tag"
 
 Os scripts não guardam credenciais. Na primeira execução você faz login na própria janela do navegador. A sessão fica num perfil local fora do repositório (`PUBLICAR_PERFIL`, padrão `~/.pipeline-video-ia/perfil-<rede>`), e antes de publicar há sempre uma pausa para revisão, a menos que você passe `--yes`.
 
+### Gerar um roteiro a partir de um tema (opcional, API do Claude)
+
+```bash
+export ANTHROPIC_API_KEY=...      # Windows (PowerShell): $env:ANTHROPIC_API_KEY="..."
+python -m pipeline gerar "por que o rio São Francisco é chamado de Velho Chico" saida/chico
+python -m pipeline validar saida/chico/roteiro.json
+```
+
+Como funciona (`pipeline/gerar.py`):
+1. **O formato é um modelo Pydantic.** `Roteiro` → `Cena` → `Fx` descreve o JSON esperado: 3 a 8 cenas, narração, até 2 peças `chip`/`cartao` por cena.
+2. **A API recebe o schema.** `client.messages.parse(..., output_format=Roteiro)` converte o modelo em JSON Schema e usa saída estruturada, então a resposta vem como JSON nesse formato.
+3. **A resposta é validada duas vezes.** O SDK valida com o próprio `Roteiro`, incluindo uma regra que o schema não expressa: o `em` de cada peça precisa aparecer na narração da cena. Depois, o dicionário passa pelo mesmo `validar()` do comando `validar`.
+4. **Se não validar, tenta de novo.** O erro de validação volta no pedido seguinte para o modelo corrigir, até 3 tentativas; depois disso, o comando para com uma mensagem clara.
+5. **Erros da API não viram traceback.** O SDK já repete sozinho limite de taxa (429), erros 5xx e falhas de rede; o que sobra (chave recusada, recusa do modelo) vira uma mensagem de uma linha.
+
+A chave vem **só** da variável `ANTHROPIC_API_KEY` e nunca é gravada. Sem ela, `gerar` avisa e sai; os outros comandos e os testes não dependem dela. O roteiro gerado usa fundo `papel` (sem mapas) e nunca sobrescreve um `roteiro.json` existente: é um rascunho para revisar e enriquecer à mão antes do `montar`.
+
 ### Configuração (variáveis de ambiente)
 
 | Variável | Padrão | Para quê |
 |---|---|---|
+| `ANTHROPIC_API_KEY` | (nenhum) | Só para `gerar`; os outros comandos não usam |
 | `PIPELINE_CACHE` | `./cache` | Tiles de mapa e malhas do IBGE |
 | `PIPELINE_UA` | genérico | User-Agent com contato (o Wikimedia pede isso) |
 | `EDGE_VOZ`, `EDGE_RITMO`, `EDGE_TOM` | `pt-BR-AntonioNeural`, `-6%`, `-2Hz` | Voz da narração |
@@ -171,9 +190,10 @@ Exemplo completo em [`exemplos/roteiro-exemplo.json`](exemplos/roteiro-exemplo.j
 
 ```
 pipeline/
-  __main__.py   CLI (validar, montar, midia, render)
+  __main__.py   CLI (validar, gerar, montar, midia, render)
   config.py     variáveis de ambiente
   roteiro.py    validação do roteiro
+  gerar.py      roteiro a partir de um tema (API do Claude + Pydantic)
   tts.py        narração por cena (edge-tts)
   legendas.py   Whisper, alinhamento com o roteiro, grupos de legenda
   mapas.py      tiles Web Mercator, projeção, malhas do IBGE
@@ -190,11 +210,11 @@ tests/          testes de lógica pura (sem rede, GPU nem ffmpeg)
 ## Testes
 
 ```bash
-pip install pytest
+pip install pytest anthropic
 pytest
 ```
 
-Os testes cobrem a lógica pura e rodam com nada além do `pytest`:
+Os testes cobrem a lógica pura e rodam só com `pytest` e o SDK `anthropic`, sem rede:
 - projeção lon/lat → pixel e lon/lat → tile, conferida contra a fórmula de referência do OpenStreetMap;
 - simplificação de contornos;
 - alinhamento Whisper → roteiro com interpolação;
@@ -203,7 +223,8 @@ Os testes cobrem a lógica pura e rodam com nada além do `pytest`:
 - filtro de licenças do Commons;
 - validação do roteiro;
 - divisão do render em blocos;
-- geração de uma cena.
+- geração de uma cena;
+- geração do roteiro com a API simulada por `unittest.mock`: sucesso, JSON inválido com nova tentativa, falha após 3 tentativas, erro da API, recusa do modelo e falta de chave.
 
 Os imports pesados (Whisper, edge-tts, Pillow, numpy) são feitos dentro das funções que os usam. O CI roda em Ubuntu com Python 3.12.
 
