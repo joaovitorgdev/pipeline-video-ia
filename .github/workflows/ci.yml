@@ -12,8 +12,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      # Os testes cobrem só lógica pura (sem rede, GPU, ffmpeg, Whisper ou TTS): basta o pytest.
-      - run: pip install pytest
+      # Os testes cobrem só lógica pura (sem rede, GPU, ffmpeg, Whisper ou TTS); a API do Claude é simulada.
+      - run: pip install pytest "anthropic>=2.14"
       - run: pytest -v
       - run: python -m pipeline --help
       - run: python -m pipeline validar exemplos/roteiro-exemplo.json
